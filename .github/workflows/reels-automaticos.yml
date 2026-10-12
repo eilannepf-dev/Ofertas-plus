@@ -12,5 +12,13 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y ffmpeg
 
-      - name: Testar FFmpeg
-        run: ffmpeg -version
+      - name: Criar video de teste
+        run: |
+          ffmpeg -f lavfi -i "color=c=blue:s=720x1280:r=30:d=5" -c:v libx264 -pix_fmt yuv420p -movflags +faststart reel-teste.mp4
+
+      - name: Disponibilizar video
+        uses: actions/upload-artifact@v4
+        with:
+          name: reel-teste
+          path: reel-teste.mp4
+
