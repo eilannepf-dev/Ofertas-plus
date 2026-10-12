@@ -7,18 +7,23 @@ jobs:
   criar-reel:
     runs-on: ubuntu-latest
     steps:
+      - name: Baixar arquivos do projeto
+        uses: actions/checkout@v4
+
       - name: Instalar FFmpeg
         run: |
           sudo apt-get update
-          sudo apt-get install -y ffmpeg
+          sudo apt-get install -y ffmpeg fonts-dejavu-core
 
-      - name: Criar video de teste
+      - name: Criar Reel do produto
         run: |
-          ffmpeg -f lavfi -i "color=c=blue:s=720x1280:r=30:d=5" -c:v libx264 -pix_fmt yuv420p -movflags +faststart reel-teste.mp4
+          ffmpeg -loop 1 -framerate 30 -i produto.jpg \
+            -vf "scale=720:1280:force_original_aspect_ratio=increase,crop=720:1280,drawbox=x=0:y=880:w=720:h=400:color=black@0.75:t=fill,drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:text='ORGANIZADOR DE COZINHA':fontcolor=white:fontsize=34:x=(w-text_w)/2:y=960,drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:text='R\$ 99,99':fontcolor=yellow:fontsize=60:x=(w-text_w)/2:y=1030,drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf:text='Confira o link na bio!':fontcolor=white:fontsize=30:x=(w-text_w)/2:y=1130,fade=t=in:st=0:d=0.7,fade=t=out:st=7.3:d=0.7" \
+            -t 8 -c:v libx264 -pix_fmt yuv420p \
+            -movflags +faststart reel-produto.mp4
 
-      - name: Disponibilizar video
+      - name: Salvar Reel
         uses: actions/upload-artifact@v4
         with:
-          name: reel-teste
-          path: reel-teste.mp4
-
+          name: reel-produto
+          path: reel-produto.mp4
