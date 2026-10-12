@@ -1,0 +1,11 @@
+name: Reels Automaticos
+
+on:
+  workflow_dispatch:
+
+jobs:
+  criar-reel:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Preparar FFmpeg
+        run: ffmpeg -version
